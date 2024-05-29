@@ -1,12 +1,12 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar class="flex flex-center">
-        <div class="text-center q-ma-lg">
-          <p class="text-h4 text-center">Crud Pedidos</p>
-          Quasar v{{ $q.version }}
+  <q-layout view="lHh Lpr lFf" class="">
+    <q-header >
+      <div class=" q-px-lg q-pt-xl q-mb-md f flex flex-center">
+        <div class="text-center">
+          <div class="col-12 text-h3 q-pb-sm">Quasar Estoque</div>
+          <div class="col-12 text-subtitle1">{{ todaysDate }}</div>
         </div>
-      </q-toolbar>
+      </div>
     </q-header>
 
     <q-page-container>
@@ -16,13 +16,19 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { date } from 'quasar'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
 
-  data () {
-    return {
+  components: {
+  },
+
+  computed: {
+    todaysDate() {
+      const timeStamp = Date.now()
+      return date.formatDate(timeStamp, 'hh:mm dddd DD MMM')
     }
   },
 })
