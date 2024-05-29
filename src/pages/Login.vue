@@ -59,8 +59,18 @@
               </div>
               <div class="flex col-12 justify-between row">
                 <div class="col full-width">
-                  <q-input type="date" v-model.trim="newDate" label="Data de Entrega" outlined class="q-ma-sm ">
-                        
+                  <q-input v-model.trim="newDate" label="Data de Entrega" outlined class="q-ma-sm ">
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="date">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
                   </q-input>
                 </div>
                 <div class="col full-width">
@@ -70,8 +80,7 @@
               <div class="col-12 q-mt-md">
                 <q-table title="Produtos" :rows="product" :columns="columns" row-key="id"
                   class="no-shadow col-11 q-mt-lg" bordered selection="multiple" v-model:selected="teste"
-                  separator="cell" table-header-style="font-size: 1.1em"
-                  :visible-columns="['codigo', 'observacao']">
+                  separator="cell" table-header-style="font-size: 1.1em" :visible-columns="['codigo', 'observacao']">
                   <template v-slot:top>
                     <p class="text-h5 q-ma-md">Pedidos</p>
                     <q-space></q-space>
@@ -94,9 +103,10 @@
               </div>
               <div class="q-mt-lg col-12" style="border-top: 1px solid grey">
                 <q-card-actions align="right" class="q-pa-lg">
-                  <q-btn type="submit" :disabled="newClient == '' || newDescription == '' || newDate == '' || product == ''">
+                  <q-btn type="submit"
+                    :disabled="newClient == '' || newDescription == '' || newDate == '' || product == ''">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                      fill="#5f6368" class="q-mr-sm" >
+                      fill="#5f6368" class="q-mr-sm">
                       <path
                         d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z" />
                     </svg>
@@ -152,7 +162,7 @@ export default defineComponent({
       this.product.push({
         codigo: this.product.length + 1, cliente: this.newClient, entrega: this.newDate, observacao: this.newDescription
       })
-      
+
       this.newClient = ''
       this.newDate = ''
       this.newDescription = ''
