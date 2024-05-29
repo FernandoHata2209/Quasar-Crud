@@ -1,0 +1,29 @@
+<template>
+  <q-layout view="lHh Lpr lFf">
+    <q-header elevated>
+      <q-toolbar class="flex flex-center">
+        <div class="text-center q-ma-lg">
+          <p class="text-h4 text-center">Crud Pedidos</p>
+          Quasar v{{ $q.version }}
+        </div>
+      </q-toolbar>
+    </q-header>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'MainLayout',
+
+  data () {
+    return {
+    }
+  },
+})
+</script>
