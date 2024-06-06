@@ -90,7 +90,72 @@ import QTableMiniComponents from "./QTableMiniComponents.vue";
 export default defineComponent({
   components: { QTableMiniComponents },
   data() {
-    return {};
+    return {
+      columns: [
+        { name: "codigo", label: "Código", align: "left" },
+        { name: "cliente", label: "Cliente", align: "left" },
+        { name: "entrega", label: "Entrega", align: "center" },
+        { name: "observacao", label: "Observação", align: "left" },
+      ],
+      products: [
+        {
+          codigo: "1",
+          cliente: "Fernando",
+          entrega: "06/06/2024",
+          observacao: "Perigo, tomar cuidado!",
+        },
+        {
+          id: 2,
+          codigo: "2",
+          cliente: "Henrique",
+          entrega: "20/10/2024",
+          observacao: "Cuidado, produto muito perigoso!",
+        },
+      ],
+      formAddProduct: {},
+      selectedProducts: [],
+      currentProduct: null,
+      selectedEditProducts: [],
+      formProduct: {
+        codigo: "",
+        cliente: "",
+        entrega: "",
+        observacao: "",
+      },
+    };
+  },
+  methods: {
+    addProduct(products) {
+      this.products.push({
+        codigo: this.formAddProduct.codigo,
+        cliente: this.formProduct.cliente,
+        entrega: this.formProduct.entrega,
+        observacao: this.formAddProduct.observacao,
+        id: this.products.length + 1,
+      });
+      this.products = { ...products };
+      this.resetPopUp();
+      this.dialog = false;
+    },
+
+    updateFormAddProduct(formAddProduct) {
+      this.formAddProduct = { ...formAddProduct };
+    },
+
+    resetPopUp() {
+      this.selectedProducts = [];
+      this.selectedEditProducts = [];
+      this.formAddProduct = {
+        codigo: "",
+        observacao: "",
+      };
+      this.formProduct = {
+        codigo: "",
+        cliente: "",
+        entrega: "",
+        observacao: "",
+      };
+    },
   },
 });
 </script>

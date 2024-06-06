@@ -22,7 +22,6 @@
             <q-form-components />
           </div>
         </div>
-        <!-- Notice v-close-popup -->
       </q-card>
     </q-dialog>
     <div class="">
@@ -56,38 +55,7 @@ export default defineComponent({
   },
   data() {
     return {
-      columns: [
-        { name: "codigo", label: "Código", align: "left" },
-        { name: "cliente", label: "Cliente", align: "left" },
-        { name: "entrega", label: "Entrega", align: "center" },
-        { name: "observacao", label: "Observação", align: "left" },
-      ],
-      products: [
-        {
-          codigo: "1",
-          cliente: "Fernando",
-          entrega: "06/06/2024",
-          observacao: "Perigo, tomar cuidado!",
-        },
-        {
-          id: 2,
-          codigo: "2",
-          cliente: "Henrique",
-          entrega: "20/10/2024",
-          observacao: "Cuidado, produto muito perigoso!",
-        },
-      ],
-      formAddProduct: {},
-      selectedProducts: [],
-      currentProduct: null,
       dialog: false,
-      selectedEditProducts: [],
-      formProduct: {
-        codigo: "",
-        cliente: "",
-        entrega: "",
-        observacao: "",
-      },
     };
   },
   methods: {
@@ -97,44 +65,10 @@ export default defineComponent({
       this.dialog = true;
       console.log(this.products);
     },
-    updateFormAddProduct(formAddProduct) {
-      this.formAddProduct = { ...formAddProduct };
-    },
-    addProduct(rowProducts) {
-      this.products.push({
-        codigo: this.formAddProduct.codigo,
-        cliente: this.formProduct.cliente,
-        entrega: this.formProduct.entrega,
-        observacao: this.formAddProduct.observacao,
-        id: this.products.length + 1,
-      });
-      rowProducts = { ...this.products };
-      this.resetFormAdd();
-      this.resetForm();
-      this.resetPopUp();
-      this.dialog = false;
-    },
-    includeProducts() {
-      this.formAddProduct = { ...this.selectedEditProducts[0] };
-    },
-    resetForm() {
-      this.formProduct = {
-        codigo: "",
-        cliente: "",
-        entrega: "",
-        observacao: "",
-      };
-    },
+
     resetPopUp() {
       this.selectedProducts = [];
       this.selectedEditProducts = [];
-      this.formAddProduct = {
-        codigo: "",
-        observacao: "",
-      };
-      this.verificar = false;
-    },
-    resetFormAdd() {
       this.formAddProduct = {
         codigo: "",
         observacao: "",

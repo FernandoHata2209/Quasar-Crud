@@ -120,6 +120,7 @@ export default defineComponent({
       rowProducts: this.products,
     };
   },
+  emits: ["updateformAddProduct", "addProduct"],
   methods: {
     handleClick(props) {
       props.selected = !props.selected;
@@ -127,11 +128,9 @@ export default defineComponent({
     },
     updateFormAddProduct() {
       this.$emit("updateformAddProduct", { ...this.optionsProducts[0] });
-      console.log(this.formAddProduct);
     },
     addFormProduct() {
       this.$emit("addProduct", { ...this.rowProducts });
-      console.log(this.rowProducts);
     },
   },
 });
