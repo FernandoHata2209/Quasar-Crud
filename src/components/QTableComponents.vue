@@ -13,6 +13,7 @@
           v-model:selected="selectedProducts"
           separator="cell"
           key="id"
+          
           :visible-columns="['codigo', 'cliente', 'entrega', 'observacao']"
           @edit-product="openEditDialog"
           @remove-product="removeProduct"
@@ -74,7 +75,7 @@
 import { defineComponent } from "vue";
 import QDialogComponents from "./QDialogComponents.vue";
 
-export default defineComponent ({
+export default defineComponent({
   components: { QDialogComponents },
   name: "QTableComponents",
   props: [],
@@ -104,7 +105,6 @@ export default defineComponent ({
       selectedProducts: [],
       currentProduct: null,
       dialog: false,
-
     };
   },
   methods: {

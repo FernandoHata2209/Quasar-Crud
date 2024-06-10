@@ -1,9 +1,10 @@
 <template>
+  <q-form-components @AddFormProduct="handleAddFormProduct" />
   <q-card>
     <q-table
       title="Pedidos"
       :rows="rowProducts"
-      :columns="columnsProducts"
+      :columns="column"
       row-key="id"
       class="no-shadow col-10 q-mt-lg"
       bordered
@@ -11,7 +12,7 @@
       v-model:selected="optionsProducts"
       updated:selected="formAddProducts"
       separator="cell"
-      table-header-style="font-size: 1.1em"
+      table-header-style="font-size: 1.3em"
       :visible-columns="['codigo', 'observacao']"
     >
       <template v-slot:top>
@@ -22,20 +23,13 @@
             <q-icon name="search"></q-icon>
           </template>
         </q-input>
-        <q-btn round color="blue-5" class="q-ma-md" @click="dialog = true">
-          <q-icon src="ListToDo/src/assets/add.svg">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24px"
-              viewBox="0 0 24 24"
-              width="24px"
-              fill="#fffff"
-            >
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-            </svg>
-          </q-icon>
-        </q-btn>
+        <q-btn
+          round
+          color="blue-5"
+          class="q-ma-md"
+          @click="dialog"
+          icon="add"
+        />
       </template>
 
       <template #body="props">
@@ -60,32 +54,23 @@
       </template>
     </q-table>
   </q-card>
-  <div class="q-mt-lg col-12" style="border-top: 1px solid grey">
-    <q-card-actions align="right" class="q-py-lg">
-      <q-btn
-        icon="save"
-        label="Salvar"
-        color="green-5"
-        @click="addFormProduct"
-      ></q-btn>
-    </q-card-actions>
-  </div>
+  <div class="q-mt-lg col-12" style="border-top: 1px solid grey"></div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import QFormComponents from "./QFormComponents.vue";
 
 export default defineComponent({
+  components: {
+    QFormComponents,
+  },
   props: {
-    selectedEditProducts: {
-      type: Array,
-      default: () => [],
+    dialog: {
+      type: Boolean,
+      default: true,
     },
-    formAddProduct: {
-      type: Object,
-      default: () => {},
-    },
-    columns: {
+    column: {
       type: Array,
       default: () => [
         { name: "codigo", label: "Código", align: "left" },
@@ -112,25 +97,45 @@ export default defineComponent({
         },
       ],
     },
+    formAddProduct: {
+      type: Object,
+      default: () => ({
+        codigo: "",
+        observacao: "",
+      }),
+    },
+    formProduct: {
+      type: Object,
+      default: () => ({
+        cliente: "",
+        entrega: "",
+      }),
+    },
+    selectedEditProducts: {
+      type: Array,
+      default: () => [],
+    },
+    selectedProducts: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
-      optionsProducts: this.selectedEditProducts,
-      columnsProducts: this.columns,
+      optionsProducts: this.selectedProducts,
       rowProducts: this.products,
+      newFormAddProducts: this.formAddProduct,
+      newFormProducts: this.formProduct,
     };
   },
-  emits: ["updateformAddProduct", "addProduct"],
+  emits: ["updateformAddProduct", "AddFormProduct"],
   methods: {
+    handleAddFormProduct(newProducts) {
+      this.$emit("AddProduct", newProducts);
+    },
     handleClick(props) {
       props.selected = !props.selected;
       this.updateFormAddProduct();
-    },
-    updateFormAddProduct() {
-      this.$emit("updateformAddProduct", { ...this.optionsProducts[0] });
-    },
-    addFormProduct() {
-      this.$emit("addProduct", { ...this.rowProducts });
     },
   },
 });
