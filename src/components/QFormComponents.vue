@@ -72,7 +72,7 @@
         ></q-input>
       </div>
     </div>
-    <div class="flex justify-end q-my-md"></div>
+    <div class="flex justify-end q-my-sm"></div>
   </q-form>
 </template>
 
@@ -80,19 +80,31 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  data() {
-    return {
-      newProducts: {
+  name: "QFormComponents",
+  props: {
+    selectedRows: Array,
+    message: String,
+    formProduct: {
+      type: Object,
+      default: () => ({
         codigo: "",
         cliente: "",
         entrega: "",
         observacao: "",
-      },
+      }),
+    },
+  },
+  data() {
+    return {
+      newProducts: this.formProduct,
     };
   },
   methods: {
     AddFormProduct() {
-      this.$emit("AddFormProduct", this.newProducts);
+      return this.newProducts;
+    },
+    resetarFormulario() {
+      this.$emit("resetarFormulario", this.formProduct);
     },
   },
 });

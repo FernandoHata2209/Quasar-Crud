@@ -20,16 +20,20 @@
         <div class="row col-12 flex flex-center">
           <div class="col-11 row">
             <div class="full-width">
-              <q-table-mini-components @AddFormProduct="addProduct" />
+              <q-table-mini-components
+                @AdicionarProdutoTabela="handleAddFormProduct"
+                :products="products"
+                :columns="columns"
+                ref="QTableMiniRef"
+              />
             </div>
-
             <div class="full-width flex justify-end q-my-md">
               <q-btn
+                @click="AdicionarProdutoNovo"
                 icon="save"
                 label="Salvar"
                 color="green-5"
-                @click="addProduct"
-              ></q-btn>
+              />
             </div>
           </div>
         </div>
@@ -71,6 +75,7 @@ export default defineComponent({
       ],
       products: [
         {
+          id: 1,
           codigo: "1",
           cliente: "Fernando",
           entrega: "06/06/2024",
@@ -97,14 +102,16 @@ export default defineComponent({
     };
   },
   methods: {
-    addProduct(newProducts) {
-      this.products.push(newProducts);
+    handleAddFormProduct(products) {
+      products.id = this.products.length + 1;
+      this.products.push(products);
     },
-
+    AdicionarProdutoNovo() {
+      this.$refs.QTableMiniRef.AdicionarProdutoTabela();
+    },
     openAddDialog() {
       this.dialog = true;
     },
-
     resetPopUp() {
       this.selectedProducts = [];
       this.selectedEditProducts = [];

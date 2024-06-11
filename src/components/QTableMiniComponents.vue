@@ -1,15 +1,15 @@
 <template>
-  <q-form-components @AddFormProduct="handleAddFormProduct" />
+  <q-form-components ref="QFormRef" />
   <q-card>
     <q-table
       title="Pedidos"
-      :rows="rowProducts"
-      :columns="column"
+      :rows="products"
+      :columns="columns"
       row-key="id"
       class="no-shadow col-10 q-mt-lg"
       bordered
       selection="single"
-      v-model:selected="optionsProducts"
+      v-model:selected="selectedRows"
       updated:selected="formAddProducts"
       separator="cell"
       table-header-style="font-size: 1.3em"
@@ -62,6 +62,8 @@ import { defineComponent } from "vue";
 import QFormComponents from "./QFormComponents.vue";
 
 export default defineComponent({
+  name: "QTableMiniComponents",
+
   components: {
     QFormComponents,
   },
@@ -70,33 +72,8 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
-    column: {
-      type: Array,
-      default: () => [
-        { name: "codigo", label: "Código", align: "left" },
-        { name: "cliente", label: "Cliente", align: "left" },
-        { name: "entrega", label: "Entrega", align: "center" },
-        { name: "observacao", label: "Observação", align: "left" },
-      ],
-    },
-    products: {
-      type: Array,
-      default: () => [
-        {
-          codigo: "1",
-          cliente: "Fernando",
-          entrega: "06/06/2024",
-          observacao: "Perigo, tomar cuidado!",
-        },
-        {
-          id: 2,
-          codigo: "2",
-          cliente: "Henrique",
-          entrega: "20/10/2024",
-          observacao: "Cuidado, produto muito perigoso!",
-        },
-      ],
-    },
+    columns: Array,
+    products: Array,
     formAddProduct: {
       type: Object,
       default: () => ({
@@ -107,35 +84,30 @@ export default defineComponent({
     formProduct: {
       type: Object,
       default: () => ({
+        codigo: "",
         cliente: "",
         entrega: "",
+        observacao: "",
       }),
-    },
-    selectedEditProducts: {
-      type: Array,
-      default: () => [],
-    },
-    selectedProducts: {
-      type: Array,
-      default: () => [],
     },
   },
   data() {
     return {
-      optionsProducts: this.selectedProducts,
+      selectedRows: [],
       rowProducts: this.products,
       newFormAddProducts: this.formAddProduct,
       newFormProducts: this.formProduct,
     };
   },
-  emits: ["updateformAddProduct", "AddFormProduct"],
+  emits: ["AdicionarProdutoTabela"],
   methods: {
-    handleAddFormProduct(newProducts) {
-      this.$emit("AddProduct", newProducts);
-    },
     handleClick(props) {
       props.selected = !props.selected;
-      this.updateFormAddProduct();
+    },
+    AdicionarProdutoTabela() {
+      this.rowProducts = { ...this.$refs.QFormRef.AddFormProduct() };
+      console.log(this.rowProducts);
+      this.$emit("AdicionarProdutoTabela", this.rowProducts);
     },
   },
 });

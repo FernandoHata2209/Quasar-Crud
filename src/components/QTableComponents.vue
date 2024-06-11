@@ -13,7 +13,6 @@
           v-model:selected="selectedProducts"
           separator="cell"
           key="id"
-          
           :visible-columns="['codigo', 'cliente', 'entrega', 'observacao']"
           @edit-product="openEditDialog"
           @remove-product="removeProduct"
