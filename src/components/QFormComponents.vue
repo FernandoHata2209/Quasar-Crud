@@ -112,6 +112,7 @@
             round
             color="blue-5"
             class="q-ma-md"
+            push
             icon="add"
             @click="AdicionarProduto()"
           />
@@ -126,6 +127,7 @@
                 :icon="props.selected ? 'check' : ''"
                 style="border: 2px solid gray; border-radius: 3px"
                 padding="none"
+                push
                 size="10px"
                 @click="handleClick(props)"
               >
@@ -145,6 +147,7 @@
         @click="AdicionarPedidoNovo"
         icon="save"
         label="Salvar"
+        push
         color="green-5"
       />
     </div>

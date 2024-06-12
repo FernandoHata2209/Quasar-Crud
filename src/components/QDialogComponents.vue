@@ -12,6 +12,7 @@
             round
             class="q-ma-sm"
             v-close-popup
+            push
             @click="resetPopUp"
           ></q-btn>
         </q-card-section>
@@ -33,6 +34,7 @@
         round
         color="blue-5"
         class="q-ma-lg"
+        push
         @click="openAddDialog"
         icon="add"
       ></q-btn>

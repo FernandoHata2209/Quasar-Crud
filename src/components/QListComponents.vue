@@ -53,13 +53,7 @@
               <q-td :props="props" key="observacao">
                 {{ props.row.observacao }}
                 <span v-show="props.selected" class="q-ml-md">
-                  <q-btn
-                    class="q-mr-sm"
-                    push
-                    icon="edit"
-                    color="primary"
-                    @click="openEditDialog(props.row)"
-                  ></q-btn>
+                  <q-dialog-edit-components />
                   <q-btn
                     push
                     color="red-9"
@@ -84,9 +78,10 @@
 import { defineComponent } from "vue";
 import QDialogComponents from "./QDialogComponents.vue";
 import { dados } from "src/dados/dados";
+import QDialogEditComponents from "./QDialogEditComponents.vue";
 
 export default defineComponent({
-  components: { QDialogComponents },
+  components: { QDialogComponents, QDialogEditComponents },
   name: "QTableComponents",
   props: [],
   data() {
