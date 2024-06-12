@@ -4,8 +4,8 @@
       <div class="row flex flex-center">
         <q-table
           title="Pedidos"
-          :rows="products"
-          :columns="columns"
+          :rows="dados.pedidos"
+          :columns="dados.colunasPedidos"
           row-key="id"
           class="no-shadow col-11 q-my-xl"
           bordered
@@ -13,7 +13,14 @@
           v-model:selected="selectedProducts"
           separator="cell"
           key="id"
-          :visible-columns="['codigo', 'cliente', 'entrega', 'observacao']"
+          table-header-style="font-size: 1.2em"
+          :visible-columns="[
+            'codigo',
+            'cliente',
+            'entrega',
+            'observacao',
+            'pedidos',
+          ]"
           @edit-product="openEditDialog"
           @remove-product="removeProduct"
         >
@@ -66,13 +73,17 @@
         </q-table>
       </div>
     </div>
-    <q-dialog-components />
+    <q-dialog-components
+      @AdicionarPedidoLista="AdicionarPedidoLista"
+      @click="console.log(dados.pedidos)"
+    />
   </q-card>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import QDialogComponents from "./QDialogComponents.vue";
+import { dados } from "src/dados/dados";
 
 export default defineComponent({
   components: { QDialogComponents },
@@ -80,33 +91,23 @@ export default defineComponent({
   props: [],
   data() {
     return {
-      columns: [
-        { name: "codigo", label: "Código", align: "left" },
-        { name: "cliente", label: "Cliente", align: "left" },
-        { name: "entrega", label: "Entrega", align: "center" },
-        { name: "observacao", label: "Observação", align: "left" },
-      ],
-      products: [
-        {
-          codigo: "1",
-          cliente: "Fernando",
-          entrega: "06/06/2024",
-          observacao: "Perigo, tomar cuidado!",
-        },
-        {
-          id: 2,
-          codigo: "2",
-          cliente: "Henrique",
-          entrega: "20/10/2024",
-          observacao: "Cuidado, produto muito perigoso!",
-        },
-      ],
+      dados,
+      products: [],
       selectedProducts: [],
       currentProduct: null,
       dialog: false,
     };
   },
   methods: {
+    AdicionarPedidoLista(pedido, produtoSelecionado) {
+      console.log(produtoSelecionado);
+      pedido.id = this.dados.pedidos.length + 1;
+
+      pedido.produto = produtoSelecionado;
+
+      this.dados.pedidos.push(pedido);
+      console.log(this.dados.pedidos);
+    },
     openEditDialog(product) {
       this.currentProduct = product;
       this.formProduct = { ...product };

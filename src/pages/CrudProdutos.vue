@@ -2,9 +2,19 @@
   <q-page padding class="flex justify-center">
     <q-card class="my-class" style="width: 80%">
       <div>
-        <q-table flat bordered title="Produtos" :rows="produto" :columns="columns" row-key="id" separator="cell"
-          selection="multiple" v-model:selected="selectedProducts" table-header-style="font-size: 1.2em"
-          class="q-mx-xl q-my-lg">
+        <q-table
+          flat
+          bordered
+          title="Produtos"
+          :rows="dados.produtos"
+          :columns="dados.colunasProdutos"
+          row-key="id"
+          separator="cell"
+          selection="multiple"
+          v-model:selected="selectedProducts"
+          table-header-style="font-size: 1.2em"
+          class="q-mx-xl q-my-lg"
+        >
           <template v-slot:top>
             <p class="text-h5 q-ma-md">Produtos</p>
             <q-space />
@@ -17,19 +27,34 @@
           <template #body="props">
             <q-tr :props="props">
               <q-td class="flex flex-center">
-                <q-btn flat round :icon="props.selected ? 'check' : ''"
-                  style="border: 2px solid gray; border-radius: 3px" padding="none" size="10px"
+                <q-btn
+                  flat
+                  round
+                  :icon="props.selected ? 'check' : ''"
+                  style="border: 2px solid gray; border-radius: 3px"
+                  padding="none"
+                  size="10px"
                   @click="props.selected = !props.selected"
-
-                  >
-
+                >
                 </q-btn>
               </q-td>
               <q-td :props="props" key="codigo">{{ props.row.codigo }}</q-td>
-              <q-td :props="props" key="observacao">{{ props.row.observacao }}
+              <q-td :props="props" key="descricao"
+                >{{ props.row.descricao }}
                 <span v-show="props.selected">
-                  <q-btn push color="blue-5" icon="edit" class="q-mx-sm" @click='openEdit(props.row)'></q-btn>
-                  <q-btn push color="red-5" icon="delete" @click="removeDialog = !removeDialog"></q-btn>
+                  <q-btn
+                    push
+                    color="blue-5"
+                    icon="edit"
+                    class="q-mx-sm"
+                    @click="openEdit(props.row)"
+                  ></q-btn>
+                  <q-btn
+                    push
+                    color="red-5"
+                    icon="delete"
+                    @click="removeDialog = !removeDialog"
+                  ></q-btn>
                 </span>
               </q-td>
             </q-tr>
@@ -39,14 +64,33 @@
                 <q-card-section class="flex justify-between">
                   <p class="text-h5 no-margin">Produto</p>
                   <q-space></q-space>
-                  <q-btn v-close-popup icon="close" round class="no-margin"></q-btn>
+                  <q-btn
+                    v-close-popup
+                    icon="close"
+                    round
+                    class="no-margin"
+                  ></q-btn>
                 </q-card-section>
                 <q-form @submit.prevent="editProduto">
                   <q-card-section>
-                    <q-input v-model="formProduct.codigo" label="Editar Código"
-                      :rules="[val => val && val.length > 0 || 'Por favor preencher dados']" />
-                    <q-input v-model="formProduct.observacao" label="Editar Observação"
-                      :rules="[val => val && val.length > 0 || 'Por favor preencher dados']" />
+                    <q-input
+                      v-model="formProduct.codigo"
+                      label="Editar Código"
+                      :rules="[
+                        (val) =>
+                          (val && val.length > 0) ||
+                          'Por favor preencher dados',
+                      ]"
+                    />
+                    <q-input
+                      v-model="formProduct.observacao"
+                      label="Editar Observação"
+                      :rules="[
+                        (val) =>
+                          (val && val.length > 0) ||
+                          'Por favor preencher dados',
+                      ]"
+                    />
                   </q-card-section>
                   <q-card-actions class="flex justify-end">
                     <q-btn label="Salvar" icon="save" type="submit"></q-btn>
@@ -59,9 +103,17 @@
             <q-dialog v-model="removeDialog" persistent>
               <q-card>
                 <q-card-section class="flex flex-center row">
-                  <p class="text-h5 text-center full-width">Tem certeza que deseja excluir?</p>
+                  <p class="text-h5 text-center full-width">
+                    Tem certeza que deseja excluir?
+                  </p>
                   <q-space></q-space>
-                  <q-btn push icon="delete" color="red-5" @click="removeProduto(props.row)" class="q-mr-md"></q-btn>
+                  <q-btn
+                    push
+                    icon="delete"
+                    color="red-5"
+                    @click="removeProduto(props.row)"
+                    class="q-mr-md"
+                  ></q-btn>
                   <q-btn push label="Cancelar" color="primary" v-close-popup />
                 </q-card-section>
               </q-card>
@@ -78,23 +130,46 @@
     <!-- Dialog Adicionar Produtos -->
     <q-dialog v-model="dialog" persistent>
       <q-card style="width: 80%">
-        <q-card-section class="row items-center" style="border-bottom: 1px solid grey">
+        <q-card-section
+          class="row items-center"
+          style="border-bottom: 1px solid grey"
+        >
           <p class="text-h5 q-ma-none">Produto</p>
           <q-space></q-space>
           <q-btn icon="close" round v-close-popup class="q-ma-none"></q-btn>
         </q-card-section>
 
-        <q-form @submit.prevent="addProduto">
+        <q-form @submit.prevent="adicionarProduto">
           <q-card-section class="row items-center q-mb-xl row">
-            <q-input label="Código" outlined class="q-ma-md col-5" v-model.trim="formProduct.codigo"
-              :rules="[val => val && val.length > 0 || 'Por favor preencher dados']"></q-input>
+            <q-input
+              label="Código"
+              outlined
+              class="q-ma-md col-5"
+              v-model.trim="formProduct.codigo"
+              :rules="[
+                (val) => (val && val.length > 0) || 'Por favor preencher dados',
+              ]"
+            ></q-input>
             <q-space></q-space>
-            <q-input label="Descrição" outlined class="q-ma-md col-5" v-model.trim="formProduct.observacao"
-              :rules="[val => val && val.length > 0 || 'Por favor preencher dados']"></q-input>
+            <q-input
+              label="Descrição"
+              outlined
+              class="q-ma-md col-5"
+              v-model.trim="formProduct.descricao"
+              :rules="[
+                (val) => (val && val.length > 0) || 'Por favor preencher dados',
+              ]"
+            ></q-input>
           </q-card-section>
 
           <q-card-actions align="right" style="border-top: 1px solid grey">
-            <q-btn label="Salvar" class="q-ma-sm" color="blue-7" outline type="submit">
+            <q-btn
+              label="Salvar"
+              class="q-ma-sm"
+              color="blue-7"
+              outline
+              type="submit"
+            >
               <q-icon name="save" />
             </q-btn>
           </q-card-actions>
@@ -106,43 +181,28 @@
 
 <script>
 import { defineComponent } from "vue";
+import { dados } from "src/dados/dados";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
-  data () {
+  setup() {
+    const $q = useQuasar();
+  },
+  data() {
     return {
-      columns: [
+      dados,
+      formProduct: [
         {
-          name: "codigo",
-          field: "codigo",
-          align: "left",
-          label: "Codigo",
-          sortable: true,
-          headerStyle: "font-size: 1.1em",
-        },
-        {
-          name: "observacao",
-          field: "observacao",
-          align: "left",
-          label: "Observação",
-          sortable: true,
-          headerStyle: "font-size: 1.1em",
+          codigo: "",
+          descricao: "",
         },
       ],
-      produto: [
+      currentProduct: [
         {
-          id: 1,
-          codigo: "1",
-          observacao: "teste",
+          codigo: "",
+          observacao: "",
         },
       ],
-      formProduct: [{
-        codigo: '',
-        observacao: '',
-      }],
-      currentProduct: [{
-        codigo: '',
-        observacao: '',
-      }],
       selectedProducts: [],
       dialog: false,
       removeDialog: false,
@@ -150,51 +210,67 @@ export default defineComponent({
     };
   },
   methods: {
-    addProduto () {
-      this.produto.push({
-        id: this.produto.length + 1,
+    adicionarProduto() {
+      console.log(this.dados.produtos);
+      this.dados.produtos.push({
+        id: this.dados.produtos.length + 1,
         codigo: this.formProduct.codigo,
-        observacao: this.formProduct.observacao,
+        descricao: this.formProduct.descricao,
       });
-      this.dialog = false
-      this.selectedProducts = []
-      this.resetAdd()
+      this.notificacaoAdicionado();
+      this.dialog = false;
+      this.selectedProducts = [];
+      this.resetarFormulario();
     },
-    openRemove () {
-      this.removeDialog = true
-      this.selectedProducts = []
+
+    openRemove() {
+      this.removeDialog = true;
+      this.selectedProducts = [];
     },
-    removeProduto (product) {
-      const index = this.produto.findIndex(a => a.id === product.id)
+
+    removeProduto(product) {
+      const index = this.dados.produtos.findIndex((a) => a.id === product.id);
       if (index !== -1) {
-        this.produto.splice(index, 1)
+        this.dados.produtos.splice(index, 1);
       }
-      this.removeDialog = false
+      this.removeDialog = false;
     },
-    openEdit (product) {
-      this.currentProduct = product
-      this.formProduct = { ...product }
-      this.editDialog = true
+
+    openEdit(product) {
+      this.currentProduct = product;
+      this.formProduct = { ...product };
+      this.editDialog = true;
     },
-    editProduto () {
-      const index = this.produto.findIndex(a => a.id === this.currentProduct.id)
+
+    editProduto() {
+      const index = this.dados.produtos.findIndex(
+        (a) => a.id === this.currentProduct.id
+      );
       if (index !== -1) {
-        this.produto[index] = { ...this.formProduct };
+        this.dados.produtos[index] = { ...this.formProduct };
       }
-      this.selectedProducts = []
-      this.editDialog = false
+      this.selectedProducts = [];
+      this.editDialog = false;
     },
-    resetAdd () {
-      this.formProduct = [{
-        codigo: '',
-        observacao: '',
-      }]
+
+    resetarFormulario() {
+      this.formProduct = {
+        codigo: "",
+        observacao: "",
+      };
     },
-    handleClick () {
+
+    handleClick() {
       props.selectedProducts = !props.selectedProducts;
     },
-    onSubmit () {
 
+    notificacaoAdicionado() {
+      this.$q.notify({
+        message: "Produto Adicionado com Sucesso",
+        color: "green",
+        position: "bottom",
+        timeout: 1000,
+      });
     },
   },
 });
