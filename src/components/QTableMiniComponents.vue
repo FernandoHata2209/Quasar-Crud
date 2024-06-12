@@ -1,5 +1,4 @@
 <template>
-  <q-form-components ref="QFormRef" />
   <q-card>
     <q-table
       title="Pedidos"
@@ -10,7 +9,6 @@
       bordered
       selection="single"
       v-model:selected="selectedRows"
-      updated:selected="formAddProducts"
       separator="cell"
       table-header-style="font-size: 1.3em"
       :visible-columns="['codigo', 'observacao']"
@@ -27,7 +25,6 @@
           round
           color="blue-5"
           class="q-ma-md"
-          @click="dialog"
           icon="add"
         />
       </template>
@@ -59,55 +56,23 @@
 
 <script>
 import { defineComponent } from "vue";
-import QFormComponents from "./QFormComponents.vue";
 
 export default defineComponent({
   name: "QTableMiniComponents",
-
-  components: {
-    QFormComponents,
-  },
   props: {
-    dialog: {
-      type: Boolean,
-      default: true,
-    },
     columns: Array,
     products: Array,
-    formAddProduct: {
-      type: Object,
-      default: () => ({
-        codigo: "",
-        observacao: "",
-      }),
-    },
-    formProduct: {
-      type: Object,
-      default: () => ({
-        codigo: "",
-        cliente: "",
-        entrega: "",
-        observacao: "",
-      }),
-    },
   },
+  emits: ["productSelected"],
   data() {
     return {
       selectedRows: [],
-      rowProducts: this.products,
-      newFormAddProducts: this.formAddProduct,
-      newFormProducts: this.formProduct,
     };
   },
-  emits: ["AdicionarProdutoTabela"],
   methods: {
     handleClick(props) {
       props.selected = !props.selected;
-    },
-    AdicionarProdutoTabela() {
-      this.rowProducts = { ...this.$refs.QFormRef.AddFormProduct() };
-      console.log(this.rowProducts);
-      this.$emit("AdicionarProdutoTabela", this.rowProducts);
+      this.$emit("productSelected", props.row);
     },
   },
 });

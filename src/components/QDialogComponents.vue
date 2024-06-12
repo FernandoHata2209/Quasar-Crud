@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <q-dialog v-model="dialog" persistent>
       <q-card class="row col flex flex-center">
         <q-card-section
@@ -7,62 +7,47 @@
           style="border-bottom: 1px solid grey"
         >
           <p class="text-h4 q-ma-sm">Pedido</p>
-          <q-btn
-            icon="close"
-            round
-            class="q-ma-sm"
-            v-close-popup
-            @click="resetPopUp"
-          >
-          </q-btn>
+          <q-btn icon="close" round class="q-ma-sm" v-close-popup @click="resetPopUp"></q-btn>
         </q-card-section>
 
         <div class="row col-12 flex flex-center">
           <div class="col-11 row">
+            <q-form-components
+              :formProduct="formProduct"
+              @formSubmitted="handleAddFormProduct"
+              @formSubmissionFailed="formSubmissionFailed"
+              ref="QFormRef"
+            />
             <div class="full-width">
               <q-table-mini-components
-                @AdicionarProdutoTabela="handleAddFormProduct"
-                :products="products"
-                :columns="columns"
-                ref="QTableMiniRef"
-              />
+              :products="products"
+              :columns="columns"
+              @productSelected="handleProductSelected"
+            />
             </div>
             <div class="full-width flex justify-end q-my-md">
-              <q-btn
-                @click="AdicionarProdutoNovo"
-                icon="save"
-                label="Salvar"
-                color="green-5"
-              />
+              <q-btn @click="AdicionarProdutoNovo" icon="save" label="Salvar" color="green-5" />
             </div>
           </div>
         </div>
       </q-card>
     </q-dialog>
-    <div class="">
-      <div class="full-width flex justify-end q-mr-sm">
-        <q-btn
-          round
-          color="blue-5"
-          class="q-ma-lg"
-          @click="openAddDialog"
-          icon="add"
-        >
-        </q-btn>
-      </div>
+    <div class="full-width flex justify-end q-mr-sm">
+      <q-btn round color="blue-5" class="q-ma-lg" @click="openAddDialog" icon="add"></q-btn>
     </div>
-    <div class=""></div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import QTableMiniComponents from "./QTableMiniComponents.vue";
+import QFormComponents from "./QFormComponents.vue";
 
 export default defineComponent({
   name: "QDialogComponents",
   components: {
     QTableMiniComponents,
+    QFormComponents,
   },
   data() {
     return {
@@ -74,25 +59,9 @@ export default defineComponent({
         { name: "observacao", label: "Observação", align: "left" },
       ],
       products: [
-        {
-          id: 1,
-          codigo: "1",
-          cliente: "Fernando",
-          entrega: "06/06/2024",
-          observacao: "Perigo, tomar cuidado!",
-        },
-        {
-          id: 2,
-          codigo: "2",
-          cliente: "Henrique",
-          entrega: "20/10/2024",
-          observacao: "Cuidado, produto muito perigoso!",
-        },
+        { id: 1, codigo: "1", cliente: "Fernando", entrega: "06/06/2024", observacao: "Perigo, tomar cuidado!" },
+        { id: 2, codigo: "2", cliente: "Henrique", entrega: "20/10/2024", observacao: "Cuidado, produto muito perigoso!" },
       ],
-      formAddProduct: {},
-      selectedProducts: [],
-      currentProduct: null,
-      selectedEditProducts: [],
       formProduct: {
         codigo: "",
         cliente: "",
@@ -102,27 +71,31 @@ export default defineComponent({
     };
   },
   methods: {
-    handleAddFormProduct(products) {
-      products.id = this.products.length + 1;
-      this.products.push(products);
+    handleAddFormProduct(product) {
+      product.id = this.products.length + 1;
+      this.products.push(product);
+      this.$refs.QFormRef.resetarFormulario(); // Reseta o formulário
+    },
+    handleProductSelected(product) {
+      this.formProduct = { ...product };
+    },
+    formSubmissionFailed(){
+      this.$q.notify("Erro no preenchimento do Formulario");
     },
     AdicionarProdutoNovo() {
-      this.$refs.QTableMiniRef.AdicionarProdutoTabela();
+      this.$refs.QFormRef.validateAndSubmitForm();
     },
     openAddDialog() {
       this.dialog = true;
     },
     resetPopUp() {
-      this.selectedProducts = [];
-      this.selectedEditProducts = [];
-      this.formAddProduct = {
+      this.formProduct = {
         codigo: "",
+        cliente: "",
+        entrega: "",
         observacao: "",
       };
     },
   },
 });
 </script>
-
-
-<style></style>

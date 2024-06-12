@@ -1,5 +1,5 @@
 <template>
-  <q-form @submit.prevent="AddFormProduct" class="col-12">
+  <q-form @submit.prevent="validateAndSubmitForm" class="col-12">
     <div class="flex col-12 row justify-between wrap">
       <div class="col full-width">
         <q-input
@@ -72,7 +72,6 @@
         ></q-input>
       </div>
     </div>
-    <div class="flex justify-end q-my-sm"></div>
   </q-form>
 </template>
 
@@ -82,8 +81,6 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "QFormComponents",
   props: {
-    selectedRows: Array,
-    message: String,
     formProduct: {
       type: Object,
       default: () => ({
@@ -99,13 +96,31 @@ export default defineComponent({
       newProducts: this.formProduct,
     };
   },
+  emits: ["ValidateAndSubmitForm", "ResetarFormulario"],
+
   methods: {
-    AddFormProduct() {
-      return this.newProducts;
+    validateAndSubmitForm() {
+      const isValid =
+        this.$refs.codRef.validate() &&
+        this.$refs.clientRef.validate() &&
+        this.$refs.entregaRef.validate() &&
+        this.$refs.obsRef.validate();
+
+      if (isValid) {
+        this.$emit("formSubmitted", { ...this.newProducts });
+      } else {
+        this.$emit("formSubmissionFailed");
+      }
     },
     resetarFormulario() {
-      this.$emit("resetarFormulario", this.formProduct);
+      this.newProducts = {
+        codigo: "",
+        cliente: "",
+        entrega: "",
+        observacao: ""
+      }
     },
   },
 });
 </script>
+
