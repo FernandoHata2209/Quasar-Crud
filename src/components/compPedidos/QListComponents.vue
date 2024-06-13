@@ -10,7 +10,7 @@
           class="no-shadow col-11 q-my-xl"
           bordered
           selection="multiple"
-          v-model:selected="selectedProducts"
+          v-model:selected="dados.pedidoSelecionado"
           separator="cell"
           key="id"
           table-header-style="font-size: 1.2em"
@@ -21,7 +21,6 @@
             'observacao',
             'pedidos',
           ]"
-          @edit-product="openEditDialog"
           @remove-product="removeProduct"
         >
           <template v-slot:top>
@@ -53,7 +52,17 @@
               <q-td :props="props" key="observacao">
                 {{ props.row.observacao }}
                 <span v-show="props.selected" class="q-ml-md">
-                  <q-dialog-edit-components />
+                  <q-dialog-edit-components
+                    ref="QDialogEditarRef"
+                    @editarPedido="pedidoEditado"
+                  />
+                  <q-btn
+                    push
+                    color="primary"
+                    icon="edit"
+                    class="q-mr-sm"
+                    @click="AbrirEditarDialog(props.row)"
+                  />
                   <q-btn
                     push
                     color="red-9"
@@ -76,9 +85,9 @@
 
 <script>
 import { defineComponent } from "vue";
-import QDialogComponents from "./QDialogComponents.vue";
+import QDialogComponents from "../compPedidos/QDialogComponents.vue";
 import { dados } from "src/dados/dados";
-import QDialogEditComponents from "./QDialogEditComponents.vue";
+import QDialogEditComponents from "../compPedidos/QDialogEditComponents.vue";
 
 export default defineComponent({
   components: { QDialogComponents, QDialogEditComponents },
@@ -88,8 +97,8 @@ export default defineComponent({
     return {
       dados,
       products: [],
-      selectedProducts: [],
       currentProduct: null,
+      pedidoEditar: dados.pedidoSelecionado,
       dialog: false,
     };
   },
@@ -103,17 +112,40 @@ export default defineComponent({
       this.dados.pedidos.push(pedido);
       console.log(this.dados.pedidos);
     },
-    openEditDialog(product) {
-      this.currentProduct = product;
-      this.formProduct = { ...product };
-      this.showEdit = true;
+
+    AbrirEditarDialog(props) {
+      this.$refs.QDialogEditarRef.abrirEditarDialog(props);
     },
-    removeProduct(product) {
-      const index = this.products.findIndex((p) => p.id === product.id);
+
+    pedidoEditado(pedidoEditado) {
+      console.log(pedidoEditado);
+      const index = this.dados.pedidos.findIndex(
+        (p) => p.id === pedidoEditado.id
+      );
 
       if (index !== -1) {
-        this.products.splice(index, 1);
+        this.dados.pedidos[index] = { ...pedidoEditado };
       }
+    },
+
+    removeProduct(props) {
+      const index = this.dados.pedidos.findIndex((p) => p.id === props.id);
+      console.log(index);
+
+      if (index !== -1) {
+        this.dados.pedidos.splice(index, 1);
+        this.pedidoExcluido();
+        this.dados.pedidoSelecionado = [];
+      }
+    },
+    pedidoExcluido() {
+      this.$q.notify({
+        message: "Pedido excluido com sucesso",
+        color: "red-9",
+        position: "top",
+        timeout: 2000,
+        icon: "delete",
+      });
     },
   },
 });

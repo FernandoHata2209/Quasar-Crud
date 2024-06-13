@@ -13,7 +13,7 @@
             class="q-ma-sm"
             v-close-popup
             push
-            @click="resetPopUp"
+            @click="resetarPopup"
           ></q-btn>
         </q-card-section>
 
@@ -35,7 +35,7 @@
         color="blue-5"
         class="q-ma-lg"
         push
-        @click="openAddDialog"
+        @click="abrirDialogAdicionar"
         icon="add"
       ></q-btn>
     </div>
@@ -45,6 +45,7 @@
 <script>
 import { defineComponent } from "vue";
 import QFormComponents from "./QFormComponents.vue";
+import { dados } from "src/dados/dados";
 
 export default defineComponent({
   name: "QDialogComponents",
@@ -53,6 +54,7 @@ export default defineComponent({
   },
   data() {
     return {
+      dados,
       dialog: false,
       formProduct: {
         codigo: "",
@@ -77,17 +79,18 @@ export default defineComponent({
       this.erroPreenchimentoFormulario();
     },
 
-    openAddDialog() {
+    abrirDialogAdicionar() {
       this.dialog = true;
     },
 
-    resetPopUp() {
+    resetarPopup() {
       this.formProduct = {
         codigo: "",
         cliente: "",
         entrega: "",
         observacao: "",
       };
+      this.dados.produtoSelecionadoAdicionar = [];
     },
 
     erroPreenchimentoFormulario() {

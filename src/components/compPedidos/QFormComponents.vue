@@ -94,8 +94,8 @@
         row-key="id"
         class="no-shadow col-10 q-mt-lg"
         bordered
-        selection="single"
-        v-model:selected="produtoSelecionado"
+        selection="multiple"
+        v-model:selected="dados.produtoSelecionadoAdicionar"
         separator="cell"
         table-header-style="font-size: 1.2em"
         :visible-columns="['codigo', 'descricao']"
@@ -103,7 +103,12 @@
         <template v-slot:top>
           <p class="text-h4 q-ma-md">Produtos</p>
           <q-space></q-space>
-          <q-input outlined label="Pesquisar">
+          <q-input
+            outlined
+            label="Pesquisar"
+            v-model="realizarBusca"
+            icon="search"
+          >
             <template v-slot:append>
               <q-icon name="search"></q-icon>
             </template>
@@ -175,11 +180,19 @@ export default defineComponent({
     return {
       dados,
       novoPedido: this.formProduct,
-      produtoSelecionado: [],
+      realizarBusca: "",
     };
   },
-  emits: ["formSubmitted", "ResetarFormulario", "formSubmissionFailed"],
-
+  emits: ["ResetarFormulario", "formSubmissionFailed"],
+  computed: {
+    filteredItems() {
+      return this.dados.produtos.filter((item) => {
+        return item.descricao
+          .toLowerCase()
+          .includes(this.realizarBusca.toLowerCase());
+      });
+    },
+  },
   methods: {
     AdicionarPedidoNovo() {
       const isValid =
@@ -189,7 +202,7 @@ export default defineComponent({
         this.$refs.obsRef.validate();
 
       if (isValid) {
-        if (this.produtoSelecionado.length === 0) {
+        if (this.dados.produtoSelecionadoAdicionar.length === 0) {
           this.$q.notify({
             message: "Selecione um Produto",
             color: "red",
@@ -200,11 +213,11 @@ export default defineComponent({
           console.log(this.novoPedido);
           this.$emit(
             "AdicionarPedido",
-            { ...this.novoPedido },
-            { ...this.produtoSelecionado }
+            this.novoPedido,
+            this.dados.produtoSelecionadoAdicionar
           );
           this.notificacaoAdicionado();
-          this.produtoSelecionado = [];
+          this.dados.produtoSelecionadoAdicionar = [];
         }
       } else {
         this.$emit("formSubmissionFailed");
@@ -221,7 +234,7 @@ export default defineComponent({
     },
 
     AdicionarProduto() {
-      if (this.produtoSelecionado.length === 0) {
+      if (this.dados.produtoSelecionadoAdicionar.length === 0) {
         this.$q.notify({
           message: "Selecione um Produto",
           color: "red",
@@ -235,7 +248,7 @@ export default defineComponent({
           position: "bottom",
           timeout: 1000,
         });
-        return this.produtoSelecionado;
+        return this.dados.produtoSelecionadoAdicionar;
       }
     },
 
@@ -250,7 +263,7 @@ export default defineComponent({
 
     handleClick(props) {
       props.selected = !props.selected;
-      console.log(this.produtoSelecionado);
+      console.log(this.dados.produtoSelecionadoAdicionar);
     },
   },
 });
