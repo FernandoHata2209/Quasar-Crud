@@ -144,10 +144,18 @@ export default defineComponent({
       this.adicionarDialog = true;
     },
     adicionarProduto() {
-      this.$emit("adicionarProduto", this.produtoAdicionar);
-      this.produtoAdicionadoNotify();
-      this.resetarPopup();
-      this.adicionarDialog = false;
+      const valido =
+        this.produtoAdicionar.codigo.length > 0 &&
+        this.produtoAdicionar.descricao.length > 0;
+
+      if (valido) {
+        this.$emit("adicionarProduto", this.produtoAdicionar);
+        this.produtoAdicionadoNotify();
+        this.resetarPopup();
+        this.adicionarDialog = false;
+      } else {
+        this.produtoRejeitadoNotify();
+      }
     },
 
     resetarPopup() {
@@ -187,6 +195,15 @@ export default defineComponent({
         icon: "check",
         position: "top",
         timeout: 1000,
+      });
+    },
+    produtoRejeitadoNotify() {
+      this.$q.notify({
+        message: "Produto não adicionado!",
+        color: "red-9",
+        icon: "close",
+        position: "top",
+        timeout: 2000,
       });
     },
     produtoEditadoNotify() {
