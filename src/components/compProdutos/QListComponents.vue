@@ -7,6 +7,7 @@
     :columns="dados.colunasProdutos"
     row-key="id"
     separator="cell"
+    :filter="busca"
     selection="multiple"
     v-model:selected="dados.produtoSelecionado"
     table-header-style="font-size: 1.2em"
@@ -15,7 +16,7 @@
     <template v-slot:top>
       <p class="text-h5 q-ma-md">Produtos</p>
       <q-space />
-      <q-input outlined label="Pesquisar">
+      <q-input outlined label="Pesquisar" v-model="busca">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
@@ -41,14 +42,14 @@
           <span v-show="props.selected">
             <q-btn
               push
-              color="blue-5"
+              color="primary"
               icon="edit"
               class="q-mx-sm"
               @click="abrirDialogEditar(props.row)"
             ></q-btn>
             <q-btn
               push
-              color="red-5"
+              color="red-9"
               icon="delete"
               @click="abrirDialogExcluir(props.row)"
             ></q-btn>
@@ -77,6 +78,7 @@ export default defineComponent({
   data() {
     return {
       dados,
+      busca: "",
     };
   },
   methods: {

@@ -97,18 +97,14 @@
         selection="multiple"
         v-model:selected="dados.produtoSelecionadoAdicionar"
         separator="cell"
+        :filter="busca"
         table-header-style="font-size: 1.2em"
         :visible-columns="['codigo', 'descricao']"
       >
         <template v-slot:top>
           <p class="text-h4 q-ma-md">Produtos</p>
           <q-space></q-space>
-          <q-input
-            outlined
-            label="Pesquisar"
-            v-model="realizarBusca"
-            icon="search"
-          >
+          <q-input outlined label="Pesquisar" v-model="busca" icon="search">
             <template v-slot:append>
               <q-icon name="search"></q-icon>
             </template>
@@ -180,19 +176,11 @@ export default defineComponent({
     return {
       dados,
       novoPedido: this.formProduct,
-      realizarBusca: "",
+      busca: "",
     };
   },
   emits: ["ResetarFormulario", "formSubmissionFailed"],
-  computed: {
-    filteredItems() {
-      return this.dados.produtos.filter((item) => {
-        return item.descricao
-          .toLowerCase()
-          .includes(this.realizarBusca.toLowerCase());
-      });
-    },
-  },
+  computed: {},
   methods: {
     AdicionarPedidoNovo() {
       const isValid =
@@ -264,6 +252,17 @@ export default defineComponent({
     handleClick(props) {
       props.selected = !props.selected;
       console.log(this.dados.produtoSelecionadoAdicionar);
+    },
+
+    metodoBusca() {
+      this.dados.produtoSelecionadoAdicionar = this.dados.produtos.filter(
+        (item) => {
+          return (
+            item.codigo.toLowerCase().includes(this.busca.toLowerCase()) ||
+            item.descricao.toLowerCase().includes(this.busca.toLowerCase())
+          );
+        }
+      );
     },
   },
 });

@@ -13,6 +13,7 @@
           v-model:selected="dados.pedidoSelecionado"
           separator="cell"
           key="id"
+          :filter="busca"
           table-header-style="font-size: 1.2em"
           :visible-columns="[
             'codigo',
@@ -26,7 +27,7 @@
           <template v-slot:top>
             <p class="text-h5 q-ma-md">Pedidos</p>
             <q-space></q-space>
-            <q-input outlined label="Pesquisar">
+            <q-input outlined label="Pesquisar" v-model="busca">
               <template v-slot:append>
                 <q-icon name="search"></q-icon>
               </template>
@@ -100,6 +101,7 @@ export default defineComponent({
       currentProduct: null,
       pedidoEditar: dados.pedidoSelecionado,
       dialog: false,
+      busca: "",
     };
   },
   methods: {
@@ -117,12 +119,12 @@ export default defineComponent({
       this.$refs.QDialogEditarRef.abrirEditarDialog(props);
     },
 
-    pedidoEditado(pedidoEditado) {
-      console.log(pedidoEditado);
+    pedidoEditado(pedidoEditado, produtoEditado) {
+      console.log(pedidoEditado, produtoEditado);
       const index = this.dados.pedidos.findIndex(
         (p) => p.id === pedidoEditado.id
       );
-
+      pedidoEditado.produto = produtoEditado;
       if (index !== -1) {
         this.dados.pedidos[index] = { ...pedidoEditado };
       }

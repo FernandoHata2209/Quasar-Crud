@@ -67,10 +67,17 @@
           row-key="id"
           :columns="dados.colunasProdutos"
           selection="multiple"
+          :filter="busca"
           v-model:selected="dados.produtoSelecionadoEditar"
         >
           <template v-slot:top>
             <p class="text-h5">Produtos</p>
+            <q-space></q-space>
+            <q-input outlined label="Pesquisar" v-model="busca" icon="search">
+              <template v-slot:append>
+                <q-icon name="search"></q-icon>
+              </template>
+            </q-input>
           </template>
         </q-table>
       </q-card-section>
@@ -81,7 +88,7 @@
             color="negative"
             icon="cancel"
             push
-            @click="console.log(pedido.id)"
+            v-close-popup
           />
           <q-btn
             label="Editar"
@@ -110,6 +117,7 @@ export default defineComponent({
       pedido: {},
       validacaoPedido: null,
       teste: [],
+      busca: "",
     };
   },
 
@@ -119,18 +127,39 @@ export default defineComponent({
     abrirEditarDialog(pedido) {
       this.pedido = { ...pedido };
       this.validacaoPedido = { ...pedido };
+
+      const index = this.dados.pedidos.findIndex((a) => a.id === pedido.id);
+      this.dados.produtoSelecionadoEditar = this.dados.pedidos[index].produto;
+
       this.editarDialog = true;
     },
 
     editarPedido() {
       if (
+        JSON.stringify(this.dados.produtoSelecionadoEditar) !==
+        JSON.stringify(this.pedido.produto)
+      ) {
+        this.pedidoAlterado();
+        this.$emit(
+          "editarPedido",
+          this.pedido,
+          this.dados.produtoSelecionadoEditar
+        );
+        this.editarDialog = false;
+      } else if (
         JSON.stringify(this.pedido) === JSON.stringify(this.validacaoPedido)
       ) {
         this.pedidoInalterado();
+
         this.editarDialog = false;
       } else {
         this.pedidoAlterado();
-        this.$emit("editarPedido", this.pedido);
+        this.$emit(
+          "editarPedido",
+          this.pedido,
+          this.dados.produtoSelecionadoEditar
+        );
+        this.editarDialog = false;
       }
     },
 
@@ -147,18 +176,14 @@ export default defineComponent({
         type: "ongoing",
         message: "Realizando alterações",
       });
-      setTimeout(
-        () => {
-          notit({
-            type: "positive",
-            message: "Pedido alterado com sucesso!",
-            position: "bottom",
-            timeout: 2000,
-          });
-        },
-        3000,
-        (this.editarDialog = false)
-      );
+      setTimeout(() => {
+        notit({
+          type: "positive",
+          message: "Pedido alterado com sucesso!",
+          position: "bottom",
+          timeout: 2000,
+        });
+      }, 3000);
     },
   },
 });

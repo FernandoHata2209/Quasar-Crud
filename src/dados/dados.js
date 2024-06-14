@@ -108,7 +108,8 @@ export const dados = reactive({
     },
   ],
 
-  produtoSelecionadoAdcio: [],
+  produtoSelecionadoAdicionar: [],
   pedidoSelecionado: [],
   produtoSelecionadoEditar: [],
+  produtoSelecionado: []
 })
