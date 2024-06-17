@@ -68,7 +68,7 @@
               <q-item-section> Crud Pedidos </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple to="/BaterPonto">
+            <q-item clickable v-ripple to="/LoginPonto">
               <q-item-section avatar>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

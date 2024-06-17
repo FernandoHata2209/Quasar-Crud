@@ -6,7 +6,8 @@ const routes = [
     children: [
       { path: 'Pedidos', name: "crudPedidos", component: () => import('src/pages/CrudPedidos.vue') },
       { path: 'Produtos', name: "crudProdutos", component: () => import('src/pages/CrudProdutos.vue') },
-      { path: 'BaterPonto', name: "baterPonto", component: () => import('src/pages/BaterPonto.vue') }
+      { path: 'LoginPonto', name: "LoginPage", component: () => import('src/pages/LoginPage.vue') },
+      { path: 'BaterPonto', name: "baterPonto", component: () => import('src/pages/BaterPontoPage.vue') }
     ]
   },
 
