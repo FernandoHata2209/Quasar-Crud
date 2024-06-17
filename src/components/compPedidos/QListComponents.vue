@@ -116,6 +116,7 @@ export default defineComponent({
     },
 
     AbrirEditarDialog(props) {
+      console.log(props);
       this.$refs.QDialogEditarRef.abrirEditarDialog(props);
     },
 

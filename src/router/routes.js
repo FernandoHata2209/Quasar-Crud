@@ -4,8 +4,9 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: 'Pedidos',name:"crudPedidos", component: () => import('src/pages/CrudPedidos.vue') },
-      { path: 'Produtos', name:"crudProdutos", component: () => import('src/pages/CrudProdutos.vue')}
+      { path: 'Pedidos', name: "crudPedidos", component: () => import('src/pages/CrudPedidos.vue') },
+      { path: 'Produtos', name: "crudProdutos", component: () => import('src/pages/CrudProdutos.vue') },
+      { path: 'BaterPonto', name: "baterPonto", component: () => import('src/pages/BaterPonto.vue') }
     ]
   },
 

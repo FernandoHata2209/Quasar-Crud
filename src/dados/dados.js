@@ -5,7 +5,7 @@ export const dados = reactive({
     {
       name: "codigo",
       field: "codigo",
-      align: "left",
+      align: "center",
       label: "Codigo",
       sortable: true,
       headerStyle: "font-size: 1.1em",
@@ -112,4 +112,6 @@ export const dados = reactive({
   pedidoSelecionado: [],
   produtoSelecionadoEditar: [],
   produtoSelecionado: []
+
+  // Dados do Bater Ponto
 })

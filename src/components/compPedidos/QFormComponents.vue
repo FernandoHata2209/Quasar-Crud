@@ -3,7 +3,7 @@
     <!-- Seção Q-Form -->
 
     <q-card-section>
-      <q-form @submit.prevent="AdicionarPedidoNovo" class="col-12">
+      <q-form @submit.prevent="salvarPedido" class="col-12">
         <div class="flex col-12 row justify-between wrap">
           <div class="col full-width">
             <q-input
@@ -34,7 +34,7 @@
           <div class="col full-width">
             <q-input
               v-model.trim="novoPedido.entrega"
-              mask
+              mask="##/##/####"
               label="Data de Entrega"
               ref="entregaRef"
               :format24h="true"
@@ -94,58 +94,22 @@
         row-key="id"
         class="no-shadow col-10 q-mt-lg"
         bordered
-        selection="multiple"
-        v-model:selected="dados.produtoSelecionadoAdicionar"
         separator="cell"
-        :filter="busca"
-        table-header-style="font-size: 1.2em"
-        :visible-columns="['codigo', 'descricao']"
       >
         <template v-slot:top>
-          <p class="text-h4 q-ma-md">Produtos</p>
+          <p class="text-h4 q-ma-md">Adicionar Produtos</p>
           <q-space></q-space>
-          <q-input outlined label="Pesquisar" v-model="busca" icon="search">
-            <template v-slot:append>
-              <q-icon name="search"></q-icon>
-            </template>
-          </q-input>
-          <q-btn
-            round
-            color="blue-5"
-            class="q-ma-md"
-            push
-            icon="add"
-            @click="AdicionarProduto()"
-          />
+          <q-dialog-pedidos @salvarProduto="salvarProduto" />
         </template>
-
-        <template #body="props">
-          <q-tr :props="props">
-            <q-td class="flex flex-center">
-              <q-btn
-                flat
-                round
-                :icon="props.selected ? 'check' : ''"
-                style="border: 2px solid gray; border-radius: 3px"
-                padding="none"
-                push
-                size="10px"
-                @click="handleClick(props)"
-              >
-              </q-btn>
-            </q-td>
-            <q-td :props="props" key="codigo">{{ props.row.codigo }}</q-td>
-            <q-td :props="props" key="descricao">{{
-              props.row.descricao
-            }}</q-td>
-          </q-tr>
-        </template>
+        <template v-slot:header></template>
+        <template v-slot:body> </template>
+        <template v-slot:bottom> </template>
       </q-table>
     </q-card-section>
     <div style="border-bottom: 1px solid grey"></div>
     <div class="full-width flex justify-end q-my-md">
       <q-btn
-        @click="AdicionarPedidoNovo"
+        @click="salvarPedido"
         icon="save"
         label="Salvar"
         push
@@ -158,9 +122,11 @@
 <script>
 import { defineComponent } from "vue";
 import { dados } from "src/dados/dados";
+import QDialogPedidos from "src/components/compPedidos/QDialogPedidos.vue";
 
 export default defineComponent({
   name: "QFormComponents",
+  components: { QDialogPedidos },
   props: {
     formProduct: {
       type: Object,
@@ -176,13 +142,15 @@ export default defineComponent({
     return {
       dados,
       novoPedido: this.formProduct,
+      novoProduto: [],
       busca: "",
     };
   },
   emits: ["ResetarFormulario", "formSubmissionFailed"],
   computed: {},
   methods: {
-    AdicionarPedidoNovo() {
+    salvarPedido() {
+      console.log(this.novoProduto);
       const isValid =
         this.$refs.codRef.validate() &&
         this.$refs.clientRef.validate() &&
@@ -190,7 +158,7 @@ export default defineComponent({
         this.$refs.obsRef.validate();
 
       if (isValid) {
-        if (this.dados.produtoSelecionadoAdicionar.length === 0) {
+        if (this.novoProduto.length === 0) {
           this.$q.notify({
             message: "Selecione um Produto",
             color: "red",
@@ -199,17 +167,17 @@ export default defineComponent({
           });
         } else {
           console.log(this.novoPedido);
-          this.$emit(
-            "AdicionarPedido",
-            this.novoPedido,
-            this.dados.produtoSelecionadoAdicionar
-          );
+          this.$emit("AdicionarPedido", this.novoPedido, this.novoProduto);
           this.notificacaoAdicionado();
-          this.dados.produtoSelecionadoAdicionar = [];
+          this.novoProduto = [];
         }
       } else {
         this.$emit("formSubmissionFailed");
       }
+    },
+
+    salvarProduto(produtoAdicionado) {
+      this.novoProduto = produtoAdicionado;
     },
 
     resetarFormulario() {
@@ -221,25 +189,6 @@ export default defineComponent({
       };
     },
 
-    AdicionarProduto() {
-      if (this.dados.produtoSelecionadoAdicionar.length === 0) {
-        this.$q.notify({
-          message: "Selecione um Produto",
-          color: "red",
-          position: "bottom",
-          timeout: 1000,
-        });
-      } else {
-        this.$q.notify({
-          message: "Produto Adicionado com Sucesso",
-          color: "green",
-          position: "bottom",
-          timeout: 1000,
-        });
-        return this.dados.produtoSelecionadoAdicionar;
-      }
-    },
-
     notificacaoAdicionado() {
       this.$q.notify({
         message: "Pedido realizado com Sucesso",
@@ -247,11 +196,6 @@ export default defineComponent({
         position: "bottom",
         timeout: 1000,
       });
-    },
-
-    handleClick(props) {
-      props.selected = !props.selected;
-      console.log(this.dados.produtoSelecionadoAdicionar);
     },
 
     metodoBusca() {

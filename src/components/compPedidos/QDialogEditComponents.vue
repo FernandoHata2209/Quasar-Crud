@@ -125,6 +125,7 @@ export default defineComponent({
 
   methods: {
     abrirEditarDialog(pedido) {
+      console.log(pedido);
       this.pedido = { ...pedido };
       this.validacaoPedido = { ...pedido };
 
@@ -135,6 +136,7 @@ export default defineComponent({
     },
 
     editarPedido() {
+      console.log(this.dados.pedidos);
       if (
         JSON.stringify(this.dados.produtoSelecionadoEditar) !==
         JSON.stringify(this.pedido.produto)
